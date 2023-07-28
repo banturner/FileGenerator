@@ -17,7 +17,7 @@ def update_placeholders(document, placeholders):
                                 run.text = run.text.replace(placeholder, value)
 
 def main():
-    template_filename = "template2.docx"
+    template_filename = "template.docx"
     output_filename = "output.docx"
 
     name = input("Enter name: ")
