@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import pandas as pd
+import requests
 
 # Set the GUI theme
 sg.theme('DarkTeal9')
@@ -8,6 +9,8 @@ sg.theme('DarkTeal9')
 EXCEL_FILE = 'example.xlsx'
 # Read existing data from the Excel file into a DataFrame
 df = pd.read_excel(EXCEL_FILE)
+# Define the Google Apps Script URL
+GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4v_doSPfcUEL2LMcM4ne5NYEvJ4lgjc55k9HPa6Y2Y74pRixRal38O7JtReCzxh1_5g/exec'
 
 # Define the layout of the GUI
 layout = [
@@ -26,6 +29,8 @@ layout = [
 
 # Create the GUI window
 window = sg.Window('simple data entry form', layout)
+
+
 
 # Event loop to capture user interactions
 while True:
@@ -56,9 +61,14 @@ while True:
         
         # Write the updated DataFrame to the Excel file
         df.to_excel(EXCEL_FILE, index=False)
-        
-        # Display a popup message to indicate successful data saving
-        sg.popup('Data Saved!')
+    
+        # Send the data to the Google Apps Script via HTTP POST
+        response = requests.post(GOOGLE_APPS_SCRIPT_URL, data=new_data)
+
+        if response.status_code == 200:
+            sg.popup('Data Saved!')
+        else:
+            sg.popup('Data Saving Failed!')
 
 # Close the GUI window when the loop ends
 window.close()
