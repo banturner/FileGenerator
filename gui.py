@@ -31,7 +31,6 @@ layout = [
 window = sg.Window('simple data entry form', layout)
 
 
-
 # Event loop to capture user interactions
 while True:
     event, values = window.read()
@@ -42,15 +41,15 @@ while True:
     if event == 'Submit':
         # Create a dictionary with user-entered data
         new_data = {
-            'temi S/N': values['temi S/N'],
-            'Item': values['Item'],
-            'Old part': values['Old part'],
-            'New part': values['New part'],
-            'Issues': values['Issues'],
-            'Date': values['Date'],
-            'Remarks': values['Remarks'],
-            'Customer': values['Customer'],
-            'Quantity': values['Quantity'],
+            'item': values['Item'],
+            'oldpart': values['Old part'],
+            'newpart': values['New part'],
+            'issues': values['Issues'],
+            'date': values['Date'],
+            'remarks': values['Remarks'],
+            'customer': values['Customer'],
+            'quantity': values['Quantity'],
+            'sn': values['temi S/N'],
         }
         
         # Create a new DataFrame from the dictionary
@@ -63,11 +62,12 @@ while True:
         df.to_excel(EXCEL_FILE, index=False)
     
         # Send the data to the Google Apps Script via HTTP POST
-        response = requests.post(GOOGLE_APPS_SCRIPT_URL, data=new_data)
+        response = requests.post(GOOGLE_APPS_SCRIPT_URL, params=new_data)
 
         if response.status_code == 200:
             sg.popup('Data Saved!')
         else:
+            print(response.status_code)
             sg.popup('Data Saving Failed!')
 
 # Close the GUI window when the loop ends
